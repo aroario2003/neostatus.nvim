@@ -72,10 +72,10 @@ local function get_file_icon()
     local _, color = di.get_icon_color_by_filetype(vim.bo.filetype)
     vim.api.nvim_set_hl(0, 'StatusLineFileIconColor',
         { fg = color, bold = false })
-    if not get_cur_fname() == "[No Name]" then
-        return " %#StatusLineFileIconColor#" .. di.get_icon_by_filetype(vim.bo.filetype, {}) .. " "
-    else
+    if get_cur_fname() == "[No Name]" then
         return ""
+    else
+        return " %#StatusLineFileIconColor#" .. di.get_icon_by_filetype(vim.bo.filetype) .. " "
     end
 end
 
@@ -103,9 +103,27 @@ local function get_git_branch()
     return ""
 end
 
+local function get_cur_lsp_name()
+    local clients = vim.lsp.get_clients()
+    if #clients == 0 then
+        return "  LSP: No Lsp"
+    else
+        for _, client in ipairs(clients) do
+            ---@diagnostic disable-next-line:undefined-field
+            local filetypes = client.config.filetypes
+            if filetypes and vim.fn.index(filetypes, vim.bo.filetype) then
+                return "  LSP: " .. client.name
+            end
+        end
+    end
+end
+
 function _G.neostatus_show()
     require("neostatus.highlights")
     return table.concat({
+        "%#StatusLineBlockColor#",
+        "▊",
+        "%#StatusLineFgColor#",
         get_mode_hl(vim.api.nvim_get_mode().mode),
         get_mode_text(),
         get_file_icon(),
@@ -113,12 +131,16 @@ function _G.neostatus_show()
         get_cur_fname(),
         "%#StatusLineFgColor#",
         get_line_info(),
+        "%=",
+        get_cur_lsp_name(),
         -- seperator for other section
         "%=",
         "%#StatusLineGitBranchColor#",
         get_git_branch(),
         "%#StatusLineFgColor#",
         get_cur_ftype(),
+        "%#StatusLineBlockColor#",
+        "▊",
     })
 end
 

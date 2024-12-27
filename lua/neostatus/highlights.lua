@@ -32,3 +32,4 @@ vim.api.nvim_set_hl(0, 'StatusLineTerminalModeColor', { fg = colors['blue'], bol
 vim.api.nvim_set_hl(0, 'StatusLineFilenameColor', { fg = colors['magenta'], bold = true })
 vim.api.nvim_set_hl(0, 'StatusLineFgColor', { fg = colors['fg'], bold = false })
 vim.api.nvim_set_hl(0, 'StatusLineGitBranchColor', { fg = colors['green'], bold = false })
+vim.api.nvim_set_hl(0, 'StatusLineBlockColor', { fg = colors['blue'], bold = false })
