@@ -72,7 +72,11 @@ local function get_file_icon()
     local _, color = di.get_icon_color_by_filetype(vim.bo.filetype)
     vim.api.nvim_set_hl(0, 'StatusLineFileIconColor',
         { fg = color, bold = false })
-    return " %#StatusLineFileIconColor#" .. di.get_icon_by_filetype(vim.bo.filetype, {}) .. " "
+    if not get_cur_fname() == "[No Name]" then
+        return " %#StatusLineFileIconColor#" .. di.get_icon_by_filetype(vim.bo.filetype, {}) .. " "
+    else
+        return ""
+    end
 end
 
 ---Get the current line an column
