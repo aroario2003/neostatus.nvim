@@ -72,11 +72,11 @@ local function get_file_icon()
     local _, color = di.get_icon_color_by_filetype(vim.bo.filetype)
     vim.api.nvim_set_hl(0, 'StatusLineFileIconColor',
         { fg = color, bold = false })
-    if get_cur_fname() == "[No Name]" then
-        return ""
-    else
-        return " %#StatusLineFileIconColor#" .. di.get_icon_by_filetype(vim.bo.filetype) .. " "
+    local icon = di.get_icon_by_filetype(vim.bo.filetype)
+    if icon then
+        return " %#StatusLineFileIconColor#" .. icon .. " "
     end
+    return ""
 end
 
 ---Get the current line an column
@@ -148,13 +148,13 @@ function M.setup()
     vim.o.statusline = "%{%v:lua.neostatus_show()%}"
 end
 
-vim.api.nvim_create_autocmd("BufEnter", {
+vim.api.nvim_create_autocmd({ "BufEnter", "BufLeave" }, {
     callback = function()
         vim.o.statusline = "%{%v:lua.neostatus_show()%}"
     end
 })
 
-vim.api.nvim_create_autocmd("WinEnter", {
+vim.api.nvim_create_autocmd({ "WinEnter", "WinLeave" }, {
     callback = function()
         vim.o.statusline = "%{%v:lua.neostatus_show()%}"
     end
