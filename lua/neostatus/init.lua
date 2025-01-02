@@ -118,23 +118,33 @@ local function get_cur_lsp_name()
     end
 end
 
+local function get_filename_color()
+    if vim.bo.modified then
+        return "%#StatusLineFilenameColorMod#"
+    else
+        return "%#StatusLineFilenameColorSaved#"
+    end
+end
+
 function _G.neostatus_show()
     require("neostatus.highlights")
     return table.concat({
+        -- Left Section
         "%#StatusLineBlockColor#",
         "▊",
         "%#StatusLineFgColor#",
         get_mode_hl(vim.api.nvim_get_mode().mode),
         get_mode_text(),
         get_file_icon(),
-        "%#StatusLineFilenameColor#",
+        get_filename_color(),
         get_cur_fname(),
         "%#StatusLineFgColor#",
         get_line_info(),
         "%=",
+        -- Middle Section
         get_cur_lsp_name(),
-        -- seperator for other section
         "%=",
+        -- Right section
         "%#StatusLineGitBranchColor#",
         get_git_branch(),
         "%#StatusLineFgColor#",
